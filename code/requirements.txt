@@ -1,0 +1,8 @@
+# Requirements for the training part
+ultralytics
+albumentations
+opencv-python
+torch
+numpy
+
+# Requirements for the preprocessing part
