@@ -50,7 +50,7 @@ def save_metrics_to_json(OUTPUTS_DIR,METRICS_DIR,model_name):
         json.dump(metrics_data, f, indent=4)
 
 
-
+    
 
 def export_results(OUTPUTS_DIR, METRICS_DIR,model_name):
     os.makedirs(os.path.join(OUTPUTS_DIR,model_name), exist_ok=True)
