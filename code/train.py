@@ -1,19 +1,27 @@
-from ultralytics import YOLO
 import os
+from ultralytics import YOLO
+from eval_metrics import export_results
 
-model = YOLO('yolov8n.pt')  # nano (smallest/fastest)
+# Directory Paths
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_PATH = os.path.join(BASE_DIR, "data", "yolo_dataset", "dataset.yaml")
+OUTPUTS_DIR = os.path.join(BASE_DIR, "outputs")
+METRICS_DIR = os.path.join(BASE_DIR, "metrics")
+SAMPLE_PRED_DIR = os.path.join(OUTPUTS_DIR, "sample_predictions")
 
+os.makedirs(OUTPUTS_DIR, exist_ok=True)
+os.makedirs(METRICS_DIR, exist_ok=True)
+os.makedirs(SAMPLE_PRED_DIR, exist_ok=True)
 
+# Training 
+model = YOLO("yolov8n.pt")
 
-data_path = os.path.join("data", "yolo_dataset", "dataset.yaml")
-
-# Train
-results = model.train(
-    data= data_path, 
-    epochs=50,           # Start with 50-100 for baseline
-    imgsz=640,           # Image size
-    batch=16,            # Adjust based on GPU memory
-    device=0,            # GPU device (0, 1, 2...) or 'cpu'
-    project='artifacts',  # Save to 'artifacts/' directory
-    name='baseline_exp1'
+results_base = model.train(
+    data=DATA_PATH,
+    epochs=50,
+    imgsz=640,
+    name="baseline",
+    project=OUTPUTS_DIR  # YOLO saves directly here
 )
+
+export_results(OUTPUTS_DIR, SAMPLE_PRED_DIR, METRICS_DIR, results_base, "baseline")
