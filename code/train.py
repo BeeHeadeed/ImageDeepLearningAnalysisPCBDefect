@@ -1,6 +1,6 @@
 import os
 from ultralytics import YOLO
-from eval_metrics import export_results
+
 
 # Directory Paths
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,8 +21,6 @@ results_base = model.train(
     name="baseline",
     project=OUTPUTS_DIR  # YOLO saves directly here
 )
-
-export_results(OUTPUTS_DIR,METRICS_DIR,"baseline")
 
 
 
