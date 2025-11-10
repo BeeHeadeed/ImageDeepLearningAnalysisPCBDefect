@@ -1,17 +1,17 @@
 import os
 from ultralytics import YOLO
 from eval_metrics import export_results
+from eval_metrics import save_metrics_to_json
+from eval_metrics import sample_predictions
 
 # Directory Paths
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_PATH = os.path.join(BASE_DIR, "data", "yolo_dataset", "dataset.yaml")
 OUTPUTS_DIR = os.path.join(BASE_DIR, "outputs")
 METRICS_DIR = os.path.join(BASE_DIR, "metrics")
-SAMPLE_PRED_DIR = os.path.join(OUTPUTS_DIR, "sample_predictions")
 
 os.makedirs(OUTPUTS_DIR, exist_ok=True)
 os.makedirs(METRICS_DIR, exist_ok=True)
-os.makedirs(SAMPLE_PRED_DIR, exist_ok=True)
 
 # Training 
 model = YOLO("yolov8n.pt")
@@ -24,4 +24,7 @@ results_base = model.train(
     project=OUTPUTS_DIR  # YOLO saves directly here
 )
 
-export_results(OUTPUTS_DIR, SAMPLE_PRED_DIR, METRICS_DIR, results_base, "baseline")
+export_results(OUTPUTS_DIR,METRICS_DIR, results_base, "baseline")
+
+
+

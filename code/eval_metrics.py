@@ -1,7 +1,8 @@
 import os
 import json
 import shutil
-
+import re
+import pandas as pd
 
 def training_curves(OUTPUTS_DIR,model_name):
     src_curves = os.path.join(OUTPUTS_DIR, model_name, "results.png")
@@ -15,34 +16,47 @@ def confusion_matrix(OUTPUTS_DIR,model_name):
     if os.path.exists(src_confmat):
         shutil.copy(src_confmat, dst_confmat)
 
-def sample_prediction(OUTPUTS_DIR, SAMPLE_PRED_DIR):
-    pred_sample = os.path.join(OUTPUTS_DIR, "baseline", "val_batch0_pred.jpg")
-    dst_sample = os.path.join(SAMPLE_PRED_DIR, "pred_1.jpg")
-    if os.path.exists(pred_sample):
-        shutil.copy(pred_sample, dst_sample)
 
-def save_metrics_to_json(results, METRICS_DIR,model_name):
-    try:
-        metrics_data = {
-            "precision": results.metrics.get("metrics/precision(B)"),
-            "F1 Score": results.metrics.get("metrics/F1(B)"),
-            "recall": results.metrics.get("metrics/recall(B)"),
-            "map50": results.metrics.get("metrics/mAP50(B)"),
+def sample_predictions(OUTPUTS_DIR,model_name):
+    SAMPLE_PRED_DIR = os.path.join(OUTPUTS_DIR,model_name, "sample_predictions")
+    os.makedirs(SAMPLE_PRED_DIR, exist_ok=True)
+    MODEL_DIR = os.path.join(OUTPUTS_DIR,model_name)
+    copied = 0
+    for file in os.listdir(MODEL_DIR):
+        if  re.search(r"(train|val|test)_batch\d+_pred\.jpg$", file):
+            src = os.path.join(MODEL_DIR, file)
+            dst = os.path.join(SAMPLE_PRED_DIR, f"pred_{file}.jpg")
+            shutil.move(src, dst)
+            copied += 1
 
-        }
-        metrics_path = os.path.join(METRICS_DIR, "results_baseline.json")
-        with open(metrics_path, "w") as f:
-            json.dump(metrics_data, f, indent=4)
-    except Exception as e:
-        print(" Could not extract metrics automatically:", e)
+    if copied == 0:
+        print("No prediction images found in outputs directory.")
+    else:
+        print(f"Copied {copied} sample prediction(s) to '{SAMPLE_PRED_DIR}'")
 
-    print("Training complete.")
-    print(f"Metrics saved to: {os.path.join(METRICS_DIR, f'{model_name}.json')}")
+def save_metrics_to_json(OUTPUTS_DIR,METRICS_DIR,model_name):
+    csv_path = os.path.join(OUTPUTS_DIR, model_name, "results.csv")
+    df = pd.read_csv(csv_path)
+    last_row = df.iloc[-1]
+    metrics_data = {
+        "precision": float(last_row.get("metrics/precision(B)", 0)),
+        "recall": float(last_row.get("metrics/recall(B)", 0)),
+        "f1": float(last_row.get("metrics/F1(B)", 0)),
+        "map50": float(last_row.get("metrics/mAP50(B)", 0))
+    }
 
-def export_results(OUTPUTS_DIR, SAMPLE_PRED_DIR, METRICS_DIR,results,model_name):
+    json_path = os.path.join(METRICS_DIR, f"results_{model_name}.json")
+    with open(json_path, "w") as f:
+        json.dump(metrics_data, f, indent=4)
+
+
+
+
+def export_results(OUTPUTS_DIR, METRICS_DIR,results,model_name):
     os.makedirs(os.path.join(OUTPUTS_DIR,model_name), exist_ok=True)
+    os.makedirs(os.path.join(METRICS_DIR,model_name), exist_ok=True)
     OUTPUTS_DIR = os.path.join(OUTPUTS_DIR,model_name)
     training_curves(OUTPUTS_DIR,model_name)
     confusion_matrix(OUTPUTS_DIR,model_name)
-    sample_prediction(OUTPUTS_DIR, SAMPLE_PRED_DIR)
+    sample_predictions(OUTPUTS_DIR,model_name)
     save_metrics_to_json(results, METRICS_DIR,model_name)
