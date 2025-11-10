@@ -1,8 +1,6 @@
 import os
 from ultralytics import YOLO
 from eval_metrics import export_results
-from eval_metrics import save_metrics_to_json
-from eval_metrics import sample_predictions
 
 # Directory Paths
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,7 +22,7 @@ results_base = model.train(
     project=OUTPUTS_DIR  # YOLO saves directly here
 )
 
-export_results(OUTPUTS_DIR,METRICS_DIR, results_base, "baseline")
+export_results(OUTPUTS_DIR,METRICS_DIR,"baseline")
 
 
 

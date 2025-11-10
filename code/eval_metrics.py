@@ -52,11 +52,11 @@ def save_metrics_to_json(OUTPUTS_DIR,METRICS_DIR,model_name):
 
 
 
-def export_results(OUTPUTS_DIR, METRICS_DIR,results,model_name):
+def export_results(OUTPUTS_DIR, METRICS_DIR,model_name):
     os.makedirs(os.path.join(OUTPUTS_DIR,model_name), exist_ok=True)
     os.makedirs(os.path.join(METRICS_DIR,model_name), exist_ok=True)
     OUTPUTS_DIR = os.path.join(OUTPUTS_DIR,model_name)
     training_curves(OUTPUTS_DIR,model_name)
     confusion_matrix(OUTPUTS_DIR,model_name)
     sample_predictions(OUTPUTS_DIR,model_name)
-    save_metrics_to_json(results, METRICS_DIR,model_name)
+    save_metrics_to_json(OUTPUTS_DIR,METRICS_DIR,model_name)
