@@ -17,10 +17,10 @@ def confusion_matrix(OUTPUTS_DIR,model_name):
         shutil.copy(src_confmat, dst_confmat)
 
 
-def sample_predictions(OUTPUTS_DIR,model_name):
-    SAMPLE_PRED_DIR = os.path.join(OUTPUTS_DIR,model_name, "sample_predictions")
+def sample_predictions(OUTPUTS_DIR):
+    SAMPLE_PRED_DIR = os.path.join(OUTPUTS_DIR, "sample_predictions")
     os.makedirs(SAMPLE_PRED_DIR, exist_ok=True)
-    MODEL_DIR = os.path.join(OUTPUTS_DIR,model_name)
+    MODEL_DIR = os.path.join(OUTPUTS_DIR)
     copied = 0
     for file in os.listdir(MODEL_DIR):
         if  re.search(r"(train|val|test)_batch\d+_pred\.jpg$", file):
@@ -35,7 +35,7 @@ def sample_predictions(OUTPUTS_DIR,model_name):
         print(f"Copied {copied} sample prediction(s) to '{SAMPLE_PRED_DIR}'")
 
 def save_metrics_to_json(OUTPUTS_DIR,METRICS_DIR,model_name):
-    csv_path = os.path.join(OUTPUTS_DIR, model_name, "results.csv")
+    csv_path = os.path.join(OUTPUTS_DIR,"results.csv")
     df = pd.read_csv(csv_path)
     last_row = df.iloc[-1]
     metrics_data = {
