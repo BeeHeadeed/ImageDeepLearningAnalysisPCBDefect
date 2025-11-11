@@ -120,9 +120,6 @@ if __name__ == "__main__":
     parse_yolo_directory(
         directory='Labeled_images',
         class_names=class_names,
-        images_dir= '.\\data\\images',
-        output_csv='data\\annotations.csv'
+        images_dir= os.path.join('data','images'),
+        output_csv= os.path.join('data','annotations.csv')
     )
-
-
-
