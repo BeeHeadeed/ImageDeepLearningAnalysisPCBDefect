@@ -14,7 +14,7 @@ METRICS_DIR = os.path.join(BASE_DIR, "metrics")
 os.makedirs(OUTPUTS_DIR, exist_ok=True)
 os.makedirs(METRICS_DIR, exist_ok=True)
 ENHANCED_DIR = os.path.join(BASE_DIR, "data", "enhanced_images")
-ENHANCED_YAML = os.path.join(BASE_DIR, "data", "yolo_dataset", "dataset_enhanced.yaml")
+ENHANCED_YAML = os.path.join(BASE_DIR, "data", "enhanced_images", "dataset_enhanced.yaml")
 
 # Train
 
@@ -40,7 +40,7 @@ def enhanced_train(epochs: int):
         epochs=epochs,
         imgsz=640,
         batch=16,
-        device=0,
+        #device=0,
         project=OUTPUTS_DIR,
         name='enhanced_exp1',
         augment=True,
