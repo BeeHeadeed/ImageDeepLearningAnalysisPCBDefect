@@ -1,19 +1,29 @@
-from ultralytics import YOLO
 import os
-
-model = YOLO('yolov8n.pt')  # nano (smallest/fastest)
-
+from ultralytics import YOLO
 
 
-data_path = os.path.join("data", "yolo_dataset", "dataset.yaml")
+# Directory Paths
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_PATH = os.path.join(BASE_DIR, "data", "yolo_dataset", "dataset.yaml")
+OUTPUTS_DIR = os.path.join(BASE_DIR, "outputs")
+METRICS_DIR = os.path.join(BASE_DIR, "metrics")
 
-# Train
-results = model.train(
-    data= data_path, 
-    epochs=50,           # Start with 50-100 for baseline
-    imgsz=640,           # Image size
-    batch=16,            # Adjust based on GPU memory
-    device=0,            # GPU device (0, 1, 2...) or 'cpu'
-    project='artifacts',  # Save to 'artifacts/' directory
-    name='baseline_exp1'
+os.makedirs(OUTPUTS_DIR, exist_ok=True)
+os.makedirs(METRICS_DIR, exist_ok=True)
+
+# Training 
+model = YOLO("yolov8n.pt")
+
+epochs = int(input("Enter number of epochs for training: "))
+
+results_base = model.train(
+    data=DATA_PATH,
+    epochs=epochs,
+    imgsz=640,
+    name="baseline",
+    project=OUTPUTS_DIR  # YOLO saves directly here
 )
+
+
+
+
