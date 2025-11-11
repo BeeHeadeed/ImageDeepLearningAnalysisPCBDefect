@@ -116,42 +116,36 @@ def preprocess_dataset_images(yaml_file):
         print(f" {count} images enhanced and saved to {out_root}")
 
 def resolve_enhanced_yaml():
-  original_yaml =os.path.join("data","yolo_dataset","dataset.yaml")
-  enhanced_yaml = os.path.join("data","enhanced_images","dataset_enhanced.yaml")
+    ORIGINAL_YAML = os.path.join("data","yolo_dataset","dataset.yaml")
+    ENHANCED_ROOT = os.path.join("data", "enhanced_images")
+    ENHANCED_YAML = os.path.join(ENHANCED_ROOT, "dataset_enhanced.yaml")
+    with open(ORIGINAL_YAML,'r') as f:
+        data = yaml.safe_load(f)
+    for split in ("train","val","test"):
+        data[split] = os.path.join(ENHANCED_ROOT, split)
+    os.makedirs(os.path.dirname(ENHANCED_YAML), exist_ok=True)
+    with open(ENHANCED_YAML,'w') as f:
+        yaml.dump(data, f)
+    print(f"Enhanced dataset YAML created → {ENHANCED_YAML}")
 
-  # Load the original YAML
-  with open(original_yaml, 'r') as f:
-      data = yaml.safe_load(f)
-
-  # Replace paths for train/val/test
-  for split in ["train", "val", "test"]:
-      data[split] = os.path.join("data", "enhanced_images", split)
-
-  # Save to a new YAML file
-  with open(enhanced_yaml, 'w') as f:
-      yaml.dump(data, f, default_flow_style=False)
 
 print(f" Enhanced YAML created!")
 
 def resolve_enhanced_labels(): 
-  # Original YOLO labels
-  labels_root = Path("data/yolo_dataset/labels")
+    ORIGINAL_YAML = os.path.join("data","yolo_dataset","dataset.yaml")
+    ENHANCED_ROOT = os.path.join("data", "enhanced_images")
+    ENHANCED_YAML = os.path.join(ENHANCED_ROOT, "dataset_enhanced.yaml")
+    LABELS_ROOT = Path("data/yolo_dataset/labels")
 
-  # Enhanced images
-  enhanced_root = Path("data/enhanced_images")
-
-  # Loop over splits
-  for split in ["train", "val", "test"]:
-      img_dir = enhanced_root / split
-      for img_path in img_dir.glob("*.*"):
-          # Corresponding label filename
-          label_file = labels_root / split / f"{img_path.stem}.txt"
-          if label_file.exists():
-              shutil.copy2(label_file, img_path.parent / label_file.name)
-          else:
-              print(f" Label missing for {img_path.name}")
-
-  print(" Labels copied next to enhanced images")
+    for split in ("train","val","test"):
+        enhanced_split = Path(ENHANCED_ROOT)/split
+        for img_path in enhanced_split.glob("*.*"):
+            label_file = LABELS_ROOT/split/f"{img_path.stem}.txt"
+            if label_file.exists():
+                shutil.copy2(label_file, enhanced_split / label_file.name)
+            else:
+                print(f"Label missing for {img_path.name}")
+    print("Labels copied to enhanced images folder")
 
 
 # ===========================================
