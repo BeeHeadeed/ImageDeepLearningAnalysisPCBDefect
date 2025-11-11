@@ -31,10 +31,10 @@ def normal_train(epochs: int):
 
 def enhanced_train(epochs: int):
     # Prepare enhanced images if not already done
-    if not os.path.exists(ENHANCED_YAML):
-        preprocess_dataset_images(DATA_PATH)
-        resolve_enhanced_labels()
-        resolve_enhanced_yaml()
+    # if not os.path.exists(ENHANCED_YAML):
+    #     preprocess_dataset_images(DATA_PATH)
+    #     resolve_enhanced_labels()
+    #     resolve_enhanced_yaml()
 
     results = model.train(
         data=ENHANCED_YAML,
