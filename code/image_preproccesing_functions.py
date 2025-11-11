@@ -45,7 +45,7 @@ def Image_Processing_main(file_path: str):
   except Exception as e:
     print(f'An error occurred: {e}')
 
-
+__all__ = ["Image_Processing_main"]
 
 
 
