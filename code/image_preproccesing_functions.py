@@ -142,7 +142,7 @@ def resolve_enhanced_labels():
     enhanced_labels_root.mkdir(parents=True, exist_ok=True)
 
     for split in ["train", "val", "test"]:
-        img_dir = ENHANCED_ROOT / split            # <-- Path
+        img_dir = ENHANCED_ROOT /'images' / split            # <-- Path
         target_label_dir = enhanced_labels_root / split
         target_label_dir.mkdir(parents=True, exist_ok=True)
 
