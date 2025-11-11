@@ -116,23 +116,20 @@ def preprocess_dataset_images(yaml_file):
         print(f" {count} images enhanced and saved to {out_root}")
 
 def resolve_enhanced_yaml():
-    import os, yaml
+    enhanced_dir = os.path.join("data", "enhanced_images")
+    enhanced_yaml = os.path.join(enhanced_dir, "dataset_enhanced.yaml")
 
-    original_yaml = os.path.join("data", "yolo_dataset", "dataset.yaml")
-    enhanced_yaml = os.path.join("data", "enhanced_images", "dataset_enhanced.yaml")
-    enhanced_root = os.path.abspath("data/enhanced_images")
+    yaml_data = {
+        'path': os.path.abspath(enhanced_dir),  
+        'train': 'images/train',
+        'val': 'images/val',
+        'test': 'images/test',
+        'nc': 4,
+        'names': ['Missing_hole', 'Mouse_bite', 'Open_circuit', 'Short']
+    }
 
-    # Load original YAML
-    with open(original_yaml, 'r') as f:
-        data = yaml.safe_load(f)
-
-    # Update paths to enhanced images
-    for split in ["train", "val", "test"]:
-        data[split] = os.path.join(enhanced_root, split)  # absolute path
-
-    # Save new YAML
     with open(enhanced_yaml, 'w') as f:
-        yaml.dump(data, f, default_flow_style=False)
+        yaml.dump(yaml_data, f, default_flow_style=False)
 
     print(f"Enhanced YAML created at {enhanced_yaml}")
 
