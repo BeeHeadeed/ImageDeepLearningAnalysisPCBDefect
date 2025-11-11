@@ -14,9 +14,11 @@ os.makedirs(METRICS_DIR, exist_ok=True)
 # Training 
 model = YOLO("yolov8n.pt")
 
+epochs = input("Enter number of epochs for training: ")
+
 results_base = model.train(
     data=DATA_PATH,
-    epochs=50,
+    epochs=epochs,
     imgsz=640,
     name="baseline",
     project=OUTPUTS_DIR  # YOLO saves directly here
