@@ -117,7 +117,7 @@ def preprocess_dataset_images(yaml_file):
 
 def resolve_enhanced_yaml():
   original_yaml =os.path.join("data","yolo_dataset","dataset.yaml")
-  enhanced_yaml = os.path.join("data","yolo_dataset","dataset_enhanced.yaml")
+  enhanced_yaml = os.path.join("data","enhanced_images","dataset_enhanced.yaml")
 
   # Load the original YAML
   with open(original_yaml, 'r') as f:
