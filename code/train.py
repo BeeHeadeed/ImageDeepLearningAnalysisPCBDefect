@@ -15,7 +15,7 @@ METRICS_DIR = os.path.join(BASE_DIR, "metrics")
 os.makedirs(OUTPUTS_DIR, exist_ok=True)
 os.makedirs(METRICS_DIR, exist_ok=True)
 ENHANCED_DIR = os.path.join(BASE_DIR, "data", "enhanced_images")
-ENHANCED_YAML = os.path.join(BASE_DIR, "data", "yolo_dataset", "enhanced_images.yaml")
+ENHANCED_YAML = os.path.join(BASE_DIR, "data", "yolo_dataset", "dataset_enhanced.yaml")
 
 # Train
 
