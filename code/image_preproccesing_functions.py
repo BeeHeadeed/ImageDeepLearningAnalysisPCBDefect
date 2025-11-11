@@ -139,8 +139,8 @@ def resolve_enhanced_labels():
     os.makedirs(enhanced_labels_root, exist_ok=True)
 
     for split in ["train", "val", "test"]:
-        img_dir = ENHANCED_ROOT / split
-        target_label_dir = enhanced_labels_root / split
+        img_dir = os.path.join(ENHANCED_ROOT, split)
+        target_label_dir = os.path.join(enhanced_labels_root, split)
         os.makedirs(target_label_dir, exist_ok=True)
 
         for img_path in img_dir.glob("*.*"):
