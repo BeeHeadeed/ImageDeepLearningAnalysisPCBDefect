@@ -208,3 +208,12 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Juan's stuff
+my_notes.txt
+## My Images
+data/images/
+data/images.zip
+
+#Run the code to create this. 
+data/yolo_dataset/ 
