@@ -117,6 +117,8 @@ def create_yolo_structure(
         print(f"   Processed {stats[split_name]['images']} images with {stats[split_name]['annotations']} annotations")
     
     # Create dataset.yaml file
+    sorted_classes = [name for name, _id in sorted(class_map.items(), key=lambda x: x[1])]
+
     yaml_content = f"""# YOLO Dataset Configuration
                         path: {output_path.absolute()}
                         train: images/train
@@ -124,8 +126,8 @@ def create_yolo_structure(
                         test: images/test
 
                         # Classes
-                        nc: {len(class_mapping)}
-                        names: {list(class_mapping.keys())}
+                        nc: {len(sorted_classes)}
+                        names: {sorted_classes}
                         """
     
     yaml_file = output_path / 'dataset.yaml'
