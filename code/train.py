@@ -1,13 +1,11 @@
 import os
 import yaml, glob
 from PIL import Image 
-global model
-model = YOLO('yolov8n.pt')  # nano (smallest/fastest)
 from ultralytics import YOLO
 import sys
 from image_preproccesing_functions import preprocess_dataset_images,resolve_enhanced_labels,resolve_enhanced_yaml
 
-
+model = YOLO('yolov8n.pt')  # nano (smallest/fastest)
 # Directory Paths
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_PATH = os.path.join(BASE_DIR, "data", "yolo_dataset", "dataset.yaml")
