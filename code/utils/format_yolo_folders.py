@@ -145,9 +145,12 @@ def create_yolo_structure(
 
 if __name__ == "__main__":
 
-    class_map = {0: 'Missing_hole',
-            2: 'Mouse_bite',
-            3: 'Open_circuit',
-            1: 'Short'}
+    class_map = {
+        'Missing_hole': 0,
+        'Mouse_bite': 2,
+        'Open_circuit': 3,
+        'Short': 1
+        }
+
     
     output_dir = create_yolo_structure(class_mapping=class_map)
