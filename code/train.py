@@ -47,7 +47,7 @@ def enhanced_train(epochs: int):
 
         for img_path in files:
             try:
-                _, _, img_enhanced, _, _ = Image_Processing_main(img_path)
+                _, _, _, _, img_enhanced = Image_Processing_main(img_path)
                 # save enhanced image to a separate folder (preserve relative structure where possible)
                 out_root = os.path.join("artifacts", "enhanced_images")
                 try:
