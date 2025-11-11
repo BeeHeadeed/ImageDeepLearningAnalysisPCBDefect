@@ -48,6 +48,7 @@ def create_yolo_structure(
     }
     
     # Auto-generate class mapping if not provided
+
     if class_mapping is None:
         all_classes = set()
         for csv_file in splits.values():
@@ -142,4 +143,11 @@ def create_yolo_structure(
     
     return output_path, class_mapping
 
-output_dir, class_map = create_yolo_structure()
+if __name__ == "__main__":
+
+    class_map = {0: 'Missing_hole',
+            2: 'Mouse_bite',
+            3: 'Open_circuit',
+            1: 'Short'}
+    
+    output_dir, class_map = create_yolo_structure(class_mapping=class_map)
