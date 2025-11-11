@@ -134,7 +134,7 @@ print(f" Enhanced YAML created!")
 def resolve_enhanced_labels(): 
     ENHANCED_ROOT = Path("data/enhanced_images")   
     LABELS_ROOT = Path("data/yolo_dataset/labels")
-    enhanced_labels_root = Path("data/enhanced_labels")
+    enhanced_labels_root = Path("data/enhanced_images/enhanced_labels")
     enhanced_labels_root.mkdir(parents=True, exist_ok=True)
 
     for split in ["train", "val", "test"]:
