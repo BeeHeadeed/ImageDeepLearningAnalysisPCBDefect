@@ -110,9 +110,9 @@ if __name__ == "__main__":
 
     class_names = {
         0: 'Missing_hole',
-        1: 'Mouse_bite',
-        2: 'Open_circuit',
-        3: 'Short',
+        2: 'Mouse_bite',
+        3: 'Open_circuit',
+        1: 'Short',
         4: 'Spur',
         5: 'Supurious_copper'
     }
