@@ -1,31 +1,35 @@
-from ultralytics import YOLO
 import os
 from .image_preproccesing_functions import Image_Processing_main
 import yaml, glob
 from PIL import Image
 
+global model
 model = YOLO('yolov8n.pt')  # nano (smallest/fastest)
+from ultralytics import YOLO
+import sys
 
 
+# Directory Paths
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_PATH = os.path.join(BASE_DIR, "data", "yolo_dataset", "dataset.yaml")
+OUTPUTS_DIR = os.path.join(BASE_DIR, "outputs")
+METRICS_DIR = os.path.join(BASE_DIR, "metrics")
 
-data_path = os.path.join("data", "yolo_dataset", "dataset.yaml")
-
+os.makedirs(OUTPUTS_DIR, exist_ok=True)
+os.makedirs(METRICS_DIR, exist_ok=True)
 # Train
 
-def normal_train():
+def normal_train(epochs: int):
     results = model.train(
-        data= data_path, 
-        epochs=50,           # Start with 50-100 for baseline
-        imgsz=640,           # Image size
-        batch=16,            # Adjust based on GPU memory
-        device=0,            # GPU device (0, 1, 2...) or 'cpu'
-        project='artifacts',  # Save to 'artifacts/' directory
-        name='baseline_exp1'
+        data=DATA_PATH,
+        epochs=epochs,
+        imgsz=640,
+        name="baseline",
+        project=OUTPUTS_DIR  # YOLO saves directly here
     )
-
     return results
 
-def enhanced_train():
+def enhanced_train(epochs: int):
     def preprocess_dataset_images(yaml_file):
         with open(yaml_file, 'r') as f:
             ds = yaml.safe_load(f)
@@ -57,15 +61,14 @@ def enhanced_train():
             except Exception as e:
                 print(f"Skipping {img_path}: {e}")
 
-    preprocess_dataset_images(data_path)
+    preprocess_dataset_images(DATA_PATH)
         
     # prefer the enhanced images directory if it exists, otherwise fall back to the original dataset yaml
     enhanced_dir = os.path.join("artifacts", "enhanced_images")
-    train_data = enhanced_dir if os.path.exists(enhanced_dir) else data_path
-
+    train_data = enhanced_dir if os.path.exists(enhanced_dir) else DATA_PATH
     results = model.train(
         data=train_data, 
-        epochs=100,           # More epochs for enhanced training
+        epochs=epochs,           # More epochs for enhanced training
         imgsz=640,           # Image size
         batch=16,            # Adjust based on GPU memory
         device=0,            # GPU device (0, 1, 2...) or 'cpu'
@@ -78,3 +81,19 @@ def enhanced_train():
     )
 
     return results
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python train.py <normal|enhanced> [epochs]")
+        sys.exit(1)
+
+    mode = sys.argv[1]
+    epochs = int(sys.argv[2]) if len(sys.argv) > 2 else 50
+
+    if mode == "normal":
+        normal_train(epochs)
+    elif mode == "enhanced":
+        enhanced_train(epochs)
+    else:
+        print(f"Unknown mode: {mode}")
+        sys.exit(1)
