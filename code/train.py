@@ -1,12 +1,12 @@
 import os
 from .image_preproccesing_functions import Image_Processing_main
 import yaml, glob
-from PIL import Image
-
+from PIL import Image 
 global model
 model = YOLO('yolov8n.pt')  # nano (smallest/fastest)
 from ultralytics import YOLO
 import sys
+from image_preproccesing_functions import preprocess_dataset_images,resolve_enhanced_labels,resolve_enhanced_yaml
 
 
 # Directory Paths
@@ -17,6 +17,9 @@ METRICS_DIR = os.path.join(BASE_DIR, "metrics")
 
 os.makedirs(OUTPUTS_DIR, exist_ok=True)
 os.makedirs(METRICS_DIR, exist_ok=True)
+ENHANCED_DIR = os.path.join(BASE_DIR, "data", "enhanced_images")
+ENHANCED_YAML = os.path.join(BASE_DIR, "data", "yolo_dataset", "enhanced_images.yaml")
+
 # Train
 
 def normal_train(epochs: int):
@@ -30,56 +33,25 @@ def normal_train(epochs: int):
     return results
 
 def enhanced_train(epochs: int):
-    def preprocess_dataset_images(yaml_file):
-        with open(yaml_file, 'r') as f:
-            ds = yaml.safe_load(f)
+    # Prepare enhanced images if not already done
+    if not os.path.exists(ENHANCED_YAML):
+        preprocess_dataset_images(DATA_PATH)
+        resolve_enhanced_labels()
+        resolve_enhanced_yaml()
 
-        for split in ("train", "val", "test"):
-            if split not in ds:
-                continue
-
-        path = ds[split]
-        # if the YAML points to a directory, glob images; if it points to a list/file pattern, glob that
-        if os.path.isdir(path):
-            files = glob.glob(os.path.join(path, '**', '*.*'), recursive=True)
-        else:
-            files = glob.glob(path, recursive=True)
-
-        for img_path in files:
-            try:
-                _, _, _, _, img_enhanced = Image_Processing_main(img_path)
-                # save enhanced image to a separate folder (preserve relative structure where possible)
-                out_root = os.path.join("artifacts", "enhanced_images")
-                try:
-                    rel = os.path.relpath(img_path, start=path)
-                except Exception:
-                    rel = os.path.basename(img_path)
-                out_dir = os.path.join(out_root, os.path.dirname(rel))
-                os.makedirs(out_dir, exist_ok=True)
-                out_path = os.path.join(out_dir, os.path.basename(img_path))
-                Image.fromarray(img_enhanced).save(out_path)
-            except Exception as e:
-                print(f"Skipping {img_path}: {e}")
-
-    preprocess_dataset_images(DATA_PATH)
-        
-    # prefer the enhanced images directory if it exists, otherwise fall back to the original dataset yaml
-    enhanced_dir = os.path.join("artifacts", "enhanced_images")
-    train_data = enhanced_dir if os.path.exists(enhanced_dir) else DATA_PATH
     results = model.train(
-        data=train_data, 
-        epochs=epochs,           # More epochs for enhanced training
-        imgsz=640,           # Image size
-        batch=16,            # Adjust based on GPU memory
-        device=0,            # GPU device (0, 1, 2...) or 'cpu'
-        project='artifacts',  # Save to 'artifacts/' directory
+        data=ENHANCED_YAML,
+        epochs=epochs,
+        imgsz=640,
+        batch=16,
+        device=0,
+        project=OUTPUTS_DIR,
         name='enhanced_exp1',
         augment=True,
         lr0=0.01,
-        momentum=0.937,      # Momentum
-        weight_decay=0.0005  # Weight decay
+        momentum=0.937,
+        weight_decay=0.0005
     )
-
     return results
 
 if __name__ == "__main__":

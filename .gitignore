@@ -214,6 +214,7 @@ my_notes.txt
 ## My Images
 data/images/
 data/images.zip
+data/enhanced_images/
 
 #Run the code to create this. 
 data/yolo_dataset/ 
