@@ -40,7 +40,7 @@ def enhanced_train(epochs: int):
         epochs=epochs,
         imgsz=640,
         batch=16,
-        #device=0,
+        device='cpu',
         project=OUTPUTS_DIR,
         name='enhanced_exp1',
         augment=True,
