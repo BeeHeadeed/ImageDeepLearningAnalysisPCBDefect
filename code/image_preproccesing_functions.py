@@ -132,24 +132,24 @@ def resolve_enhanced_yaml():
 print(f" Enhanced YAML created!")
 
 def resolve_enhanced_labels(): 
-    ENHANCED_ROOT = os.path.join("data", "enhanced_images")
+    ENHANCED_ROOT = Path("data/enhanced_images")   
     LABELS_ROOT = Path("data/yolo_dataset/labels")
-
     enhanced_labels_root = Path("data/enhanced_labels")
-    os.makedirs(enhanced_labels_root, exist_ok=True)
+    enhanced_labels_root.mkdir(parents=True, exist_ok=True)
 
     for split in ["train", "val", "test"]:
-        img_dir = os.path.join(ENHANCED_ROOT, split)
-        target_label_dir = os.path.join(enhanced_labels_root, split)
-        os.makedirs(target_label_dir, exist_ok=True)
+        img_dir = ENHANCED_ROOT / split            
+        target_label_dir = enhanced_labels_root / split
+        target_label_dir.mkdir(parents=True, exist_ok=True)
 
-        for img_path in img_dir.glob("*.*"):
+        for img_path in img_dir.glob("*.*"):       
             original_label = LABELS_ROOT / split / f"{img_path.stem}.txt"
             if original_label.exists():
                 shutil.copy2(original_label, target_label_dir / original_label.name)
             else:
                 print(f"Label missing for {img_path.name} in split {split}")
 
+    print("Enhanced labels copied to 'data/enhanced_labels'")
     print("Enhanced labels copied to 'data/enhanced_labels'")
 
 
