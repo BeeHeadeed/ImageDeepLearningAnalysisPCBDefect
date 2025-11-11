@@ -141,7 +141,7 @@ def create_yolo_structure(
     for class_name, class_id in class_mapping.items():
         print(f"  {class_id}: {class_name}")
     
-    return output_path, class_mapping
+    return output_path
 
 if __name__ == "__main__":
 
@@ -150,4 +150,4 @@ if __name__ == "__main__":
             3: 'Open_circuit',
             1: 'Short'}
     
-    output_dir, class_map = create_yolo_structure(class_mapping=class_map)
+    output_dir = create_yolo_structure(class_mapping=class_map)
